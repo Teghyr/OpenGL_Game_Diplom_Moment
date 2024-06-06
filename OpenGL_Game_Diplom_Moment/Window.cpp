@@ -1,38 +1,50 @@
 #include <iostream>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Window.h"
-
 
 GLFWwindow* Window::window;
 
 int Window::initialize(int width, int height, const char* title) {
-    glfwInit();
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1080, 720, title, NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        std::cout << "Faill start GLFW window";
-        return -1;
-    }
+	window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+	if (window == nullptr) {
+		std::cerr << "Failed to create GLFW Window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-
-}
-
-bool Window::IsRun() {
-    return glfwWindowShouldClose(window);
-}
-
-void Window::SwapBufers() {
-    glfwSwapBuffers(window);
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK) {
+		std::cerr << "Failed to initialize GLEW" << std::endl;
+		return -1;
+	}
+	glViewport(0, 0, width, height);
+	return 0;
 }
 
 void Window::terminate() {
-    glfwTerminate();
+	glfwTerminate();
+}
+
+GLFWwindow* Window::getWindow() {
+	return Window::window;
+}
+
+bool Window::isShouldClose() {
+	return glfwWindowShouldClose(window);
+}
+
+void Window::setShouldClose(bool flag) {
+	glfwSetWindowShouldClose(window, flag);
+}
+
+void Window::swapBuffers() {
+	glfwSwapBuffers(window);
 }

@@ -1,22 +1,18 @@
-#pragma once
-
 #ifndef WINDOW_WINDOW_H_
 #define WINDOW_WINDOW_H_
 
-class GLFWwindow;
+struct GLFWwindow;
 
-class Window
-{
-	static GLFWwindow* window;
-
+class Window {
 public:
-
+	static GLFWwindow* window;
 	static int initialize(int width, int height, const char* title);
 	static void terminate();
 
-	static bool IsRun();
-	static void SwapBufers();
+	static bool isShouldClose();
+	static void setShouldClose(bool flag);
+	static void swapBuffers();
+	static GLFWwindow* getWindow();
 };
 
-
-#endif
+#endif /* WINDOW_WINDOW_H_ */
